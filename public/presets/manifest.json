@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "generated": "2026-05-01T13:42:33.816Z",
+  "categories": [
+    {
+      "name": "Butterchurn Built-in",
+      "slug": "butterchurn-base",
+      "file": null,
+      "count": null,
+      "builtIn": true
+    }
+  ],
+  "totalPresets": 0
+}

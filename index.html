@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BrainBlur — Web-native MilkDrop 2 visualizer. Thousands of psychedelic audio-reactive presets running in your browser via WebGL 2.">
+  <meta property="og:title" content="BrainBlur — MilkDrop in Your Browser">
+  <meta property="og:description" content="Thousands of psychedelic audio-reactive presets running live in WebGL 2. No plugins, no downloads.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>BrainBlur — MilkDrop Visualizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/css/style.css">
+</head>
+<body>
+  <!-- WebGL Canvas -->
+  <canvas id="visualizer-canvas"></canvas>
+
+  <!-- Splash / Start Screen -->
+  <div id="splash-screen" class="splash">
+    <div class="splash-content">
+      <h1 class="splash-title">
+        <span class="splash-glyph">🧠</span>
+        <span class="splash-text">BrainBlur</span>
+      </h1>
+      <p class="splash-subtitle">MilkDrop Visualizer — WebGL 2</p>
+      <div class="splash-actions">
+        <button id="btn-start-tab" class="btn btn-primary">
+          <span class="btn-icon">🔊</span>
+          Capture Tab Audio
+        </button>
+        <button id="btn-start-mic" class="btn btn-secondary">
+          <span class="btn-icon">🎤</span>
+          Use Microphone
+        </button>
+      </div>
+      <p class="splash-hint" id="splash-hint">Select the browser tab playing your music</p>
+      <p class="splash-compat" id="splash-compat"></p>
+    </div>
+  </div>
+
+  <!-- Overlay Controls -->
+  <div id="overlay" class="overlay hidden">
+    <div class="overlay-bar">
+      <div class="overlay-left">
+        <span class="preset-name" id="preset-name">Loading...</span>
+      </div>
+      <div class="overlay-center">
+        <button id="btn-prev" class="ctrl-btn" title="Previous Preset (←)">⏮</button>
+        <button id="btn-lock" class="ctrl-btn" title="Lock Preset (L)">🔓</button>
+        <button id="btn-next" class="ctrl-btn" title="Next Preset (→)">⏭</button>
+      </div>
+      <div class="overlay-right">
+        <button id="btn-fullscreen" class="ctrl-btn" title="Fullscreen (F)">🖥</button>
+        <button id="btn-stop" class="ctrl-btn" title="Stop Audio">⏹</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  <div id="info-panel" class="info-panel hidden">
+    <div class="info-content">
+      <h2>Keyboard Shortcuts</h2>
+      <table class="info-table">
+        <tr><td><kbd>Space</kbd></td><td>Start / Stop audio</td></tr>
+        <tr><td><kbd>→</kbd> or <kbd>N</kbd></td><td>Next preset</td></tr>
+        <tr><td><kbd>←</kbd> or <kbd>P</kbd></td><td>Previous preset</td></tr>
+        <tr><td><kbd>L</kbd></td><td>Lock / Unlock preset</td></tr>
+        <tr><td><kbd>F</kbd></td><td>Toggle fullscreen</td></tr>
+        <tr><td><kbd>I</kbd></td><td>Toggle this panel</td></tr>
+      </table>
+      <p class="info-credit">Powered by <a href="https://github.com/jberg/butterchurn" target="_blank">Butterchurn</a></p>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
