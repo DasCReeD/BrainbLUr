@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-05-01T13:42:33.816Z",
+  "generated": "2026-05-01T13:48:09.671Z",
   "categories": [
     {
       "name": "Butterchurn Built-in",
@@ -8,7 +8,73 @@
       "file": null,
       "count": null,
       "builtIn": true
+    },
+    {
+      "name": "! Transition",
+      "slug": "transition",
+      "file": "transition.json",
+      "count": 4
+    },
+    {
+      "name": "Dancer",
+      "slug": "dancer",
+      "file": "dancer.json",
+      "count": 1351
+    },
+    {
+      "name": "Drawing",
+      "slug": "drawing",
+      "file": "drawing.json",
+      "count": 1143
+    },
+    {
+      "name": "Fractal",
+      "slug": "fractal",
+      "file": "fractal.json",
+      "count": 1354
+    },
+    {
+      "name": "Geometric",
+      "slug": "geometric",
+      "file": "geometric.json",
+      "count": 1027
+    },
+    {
+      "name": "Hypnotic",
+      "slug": "hypnotic",
+      "file": "hypnotic.json",
+      "count": 280
+    },
+    {
+      "name": "Particles",
+      "slug": "particles",
+      "file": "particles.json",
+      "count": 389
+    },
+    {
+      "name": "Reaction",
+      "slug": "reaction",
+      "file": "reaction.json",
+      "count": 1791
+    },
+    {
+      "name": "Sparkle",
+      "slug": "sparkle",
+      "file": "sparkle.json",
+      "count": 797
+    },
+    {
+      "name": "Supernova",
+      "slug": "supernova",
+      "file": "supernova.json",
+      "count": 380
+    },
+    {
+      "name": "Waveform",
+      "slug": "waveform",
+      "file": "waveform.json",
+      "count": 1279
     }
   ],
-  "totalPresets": 0
+  "totalPresets": 9795
 }

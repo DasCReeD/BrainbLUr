@@ -50,29 +50,49 @@ function sanitizeCategory(name) {
 }
 
 /**
- * Read all .milk files from a category directory.
- * Returns an array of { name, content } objects.
+ * Recursively find all .milk files under a directory.
+ */
+async function findMilkFiles(dir) {
+  const results = []
+  if (!existsSync(dir)) return results
+
+  const entries = await readdir(dir, { withFileTypes: true })
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      const nested = await findMilkFiles(fullPath)
+      results.push(...nested)
+    } else if (extname(entry.name).toLowerCase() === '.milk') {
+      results.push(fullPath)
+    }
+  }
+  return results
+}
+
+/**
+ * Read all .milk files recursively from a category directory.
+ * Returns an array of { name, subcategory, content } objects.
  */
 async function readCategoryPresets(categoryPath) {
-  if (!existsSync(categoryPath)) {
-    console.warn(`  ⚠ Category directory not found: ${categoryPath}`)
-    return []
-  }
-
-  const files = await readdir(categoryPath)
-  const milkFiles = files.filter(f => extname(f).toLowerCase() === '.milk')
+  const milkPaths = await findMilkFiles(categoryPath)
+  if (milkPaths.length === 0) return []
 
   const presets = []
-  for (const file of milkFiles) {
+  for (const filePath of milkPaths) {
     try {
-      const content = await readFile(join(categoryPath, file), 'utf-8')
+      const content = await readFile(filePath, 'utf-8')
+      const relPath = filePath.replace(categoryPath, '').replace(/^[\\/]/, '')
+      const parts = relPath.split(/[\\/]/)
+      const subcategory = parts.length > 1 ? parts[0] : null
+
       presets.push({
-        name: basename(file, '.milk'),
-        filename: file,
+        name: basename(filePath, '.milk'),
+        filename: basename(filePath),
+        subcategory: subcategory,
         content: content
       })
     } catch (err) {
-      console.warn(`  ⚠ Failed to read ${file}: ${err.message}`)
+      console.warn(`  ⚠ Failed to read ${basename(filePath)}: ${err.message}`)
     }
   }
 

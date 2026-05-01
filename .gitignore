@@ -7,6 +7,11 @@ dist/
 # Raw preset archive (not deployed — too large)
 raw-presets/
 
+# Converted preset chunks (raw .milk content, too large for deploy)
+# Only manifest.json is tracked; chunks are generated locally
+public/presets/*.json
+!public/presets/manifest.json
+
 # OS files
 .DS_Store
 Thumbs.db
