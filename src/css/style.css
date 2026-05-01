@@ -1,348 +1,464 @@
-/* ============================================================
-   BrainBlur — Style System
-   ============================================================ */
+/**
+ * style.css — BrainBlur v0.2.0 (Webamp Edition)
+ *
+ * Dark background canvas, Webamp positioning,
+ * skin browser modal, and utility styles.
+ */
 
+/* ========================================
+   Design Tokens
+   ======================================== */
 :root {
-  --bg-dark: #0a0a0f;
-  --bg-glass: rgba(10, 10, 15, 0.65);
-  --bg-glass-heavy: rgba(10, 10, 15, 0.85);
+  --bg-primary: #0a0a0f;
+  --bg-surface: rgba(15, 15, 25, 0.85);
+  --bg-glass: rgba(25, 25, 40, 0.7);
   --text-primary: #e8e6f0;
-  --text-secondary: rgba(232, 230, 240, 0.6);
+  --text-secondary: #a09bb5;
   --accent-primary: #a855f7;
-  --accent-glow: rgba(168, 85, 247, 0.4);
   --accent-secondary: #06b6d4;
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --radius-sm: 8px;
-  --radius-md: 14px;
+  --accent-gradient: linear-gradient(135deg, #a855f7, #06b6d4);
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius-sm: 6px;
+  --radius-md: 12px;
   --radius-lg: 20px;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-glow: 0 0 30px rgba(168, 85, 247, 0.15);
 }
 
-/* ── Reset ───────────────────────────────────────────────── */
+/* ========================================
+   Base Reset
+   ======================================== */
 *, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--bg-dark);
-  font-family: var(--font-body);
+  background: transparent;
   color: var(--text-primary);
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Canvas ──────────────────────────────────────────────── */
-#visualizer-canvas {
+#canvas {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: block;
-  z-index: 0;
-}
-
-/* ── Splash Screen ───────────────────────────────────────── */
-.splash {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(ellipse at center, rgba(20, 15, 40, 0.95) 0%, rgba(5, 5, 10, 0.98) 70%);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-
-.splash.dismissed {
-  opacity: 0;
-  visibility: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Absolutely bottom layer, below Webamp UI */
   pointer-events: none;
 }
 
-.splash-content {
-  text-align: center;
-  max-width: 420px;
-  padding: 20px;
+/* ========================================
+   Webamp Container
+   ======================================== */
+#webamp-container {
+  position: relative;
+  z-index: 10;
+  transform-origin: top left;
 }
 
-.splash-title {
-  font-size: 3.2rem;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin-bottom: 8px;
+#webamp-container.zoom-2x {
+  zoom: 2;
+}
+
+/* Make Webamp draggable windows visible against dark bg */
+#webamp ::-webkit-scrollbar {
+  width: 8px;
+}
+
+#webamp ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+#webamp ::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 4px;
+}
+
+/* ========================================
+   Skin Toggle Button
+   ======================================== */
+.skin-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-glow);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
 }
 
-.splash-glyph {
-  font-size: 2.8rem;
-  animation: pulse-glow 2.5s ease-in-out infinite;
+.skin-toggle-btn:hover {
+  transform: scale(1.1);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
 }
 
-@keyframes pulse-glow {
-  0%, 100% { filter: drop-shadow(0 0 8px var(--accent-glow)); transform: scale(1); }
-  50% { filter: drop-shadow(0 0 20px var(--accent-glow)); transform: scale(1.08); }
+.skin-toggle-btn:active {
+  transform: scale(0.95);
 }
 
-.splash-text {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+/* ========================================
+   Skin Browser Modal
+   ======================================== */
+.skin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.skin-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skin-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.skin-modal-content {
+  position: relative;
+  width: 90vw;
+  max-width: 900px;
+  max-height: 80vh;
+  background: var(--bg-surface);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.skin-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.skin-modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
 }
 
-.splash-subtitle {
-  font-size: 0.95rem;
+.skin-count {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
   color: var(--text-secondary);
-  margin-bottom: 36px;
-  font-weight: 300;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 3px 10px;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 99px;
+  white-space: nowrap;
 }
 
-.splash-actions {
+.skin-modal-header input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.skin-modal-header input:focus {
+  border-color: var(--accent-primary);
+}
+
+.skin-close-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-/* ── Buttons ─────────────────────────────────────────────── */
-.btn {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 28px;
-  border: none;
+  flex-shrink: 0;
+}
+
+.skin-close-btn:hover {
+  background: rgba(255, 80, 80, 0.2);
+  color: #ff5050;
+}
+
+/* ========================================
+   Skin Grid
+   ======================================== */
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.skin-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  position: relative;
   overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05));
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.btn:hover::after { opacity: 1; }
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary), #7c3aed);
-  color: white;
-  box-shadow: 0 4px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
-}
-
-.btn-primary:hover {
+.skin-card:hover {
+  border-color: var(--accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+  box-shadow: 0 8px 30px rgba(168, 85, 247, 0.15);
 }
 
-.btn-primary:active { transform: translateY(0); }
-
-.btn-secondary {
-  background: var(--bg-glass);
-  color: var(--text-primary);
-  border: 1px solid var(--border-glass);
-  backdrop-filter: blur(10px);
+.skin-card.active {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
 }
 
-.btn-secondary:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.15);
+.skin-preview {
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+  background: #111;
+  padding: 4px;
 }
 
-.btn-icon { font-size: 1.2rem; }
-
-.splash-hint {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-.splash-compat {
-  font-size: 0.78rem;
-  color: #f59e0b;
-  margin-top: 12px;
-}
-
-/* ── Overlay Controls ────────────────────────────────────── */
-.overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  padding: 16px 24px;
-  transition: opacity var(--transition-smooth), transform var(--transition-smooth);
-}
-
-.overlay.hidden {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-}
-
-.overlay-bar {
+.skin-preview-placeholder {
+  width: 100%;
+  height: 100px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: var(--bg-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 10px 20px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-  max-width: 700px;
-  margin: 0 auto;
+  justify-content: center;
+  background: #111;
+  font-size: 2rem;
 }
 
-.overlay-left { flex: 1; min-width: 0; }
-.overlay-center { display: flex; gap: 6px; }
-.overlay-right { display: flex; gap: 6px; flex: 0 0 auto; }
-
-.preset-name {
-  font-size: 0.82rem;
+.skin-label {
+  padding: 8px 10px;
+  font-size: 0.72rem;
   font-family: var(--font-mono);
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: block;
-  max-width: 220px;
 }
 
-.ctrl-btn {
-  width: 40px;
-  height: 40px;
+/* ========================================
+   Drop Hint
+   ======================================== */
+.drop-hint {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(10, 10, 15, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  color: var(--text-primary);
+  font-size: 1.5rem;
+  color: var(--accent-primary);
+  border: 3px dashed var(--accent-primary);
+  margin: 20px;
+  border-radius: var(--radius-lg);
 }
 
-.ctrl-btn:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: var(--border-glass);
+.drop-hint.hidden {
+  display: none;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 600px) {
+  .skin-modal-content {
+    width: 95vw;
+    max-height: 90vh;
+  }
+
+  .skin-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .skin-modal-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+
+  .skin-toggle-btn {
+    bottom: 12px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+}
+
+/* =========================================
+   MILKDROP CONTROL PANEL
+   ========================================= */
+#milkdrop-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(15, 15, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  color: white;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#milkdrop-controls:hover {
+  background: rgba(20, 20, 25, 0.85);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+#milkdrop-controls button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+#milkdrop-controls button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+#milkdrop-controls button:active {
+  transform: scale(0.95);
+}
+
+#milkdrop-controls #btn-milk-system-audio {
+  width: auto;
+  padding: 0 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  background: linear-gradient(135deg, rgba(30, 215, 96, 0.2), rgba(30, 215, 96, 0.1));
+  border-color: rgba(30, 215, 96, 0.3);
+  color: #1ed760;
+  margin-right: 10px;
+}
+
+#milkdrop-controls #btn-milk-system-audio:hover {
+  background: linear-gradient(135deg, rgba(30, 215, 96, 0.3), rgba(30, 215, 96, 0.2));
+  border-color: rgba(30, 215, 96, 0.5);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(30, 215, 96, 0.4);
+}
+
+#milkdrop-controls #milk-preset-name {
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 250px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* =========================================
+   ZEN MODE
+   ========================================= */
+#btn-zen-mode {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(15, 15, 25, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+#btn-zen-mode:hover {
+  background: rgba(15, 15, 25, 0.8);
+  color: #fff;
+  border-color: rgba(168, 85, 247, 0.5);
   transform: scale(1.1);
 }
 
-.ctrl-btn:active { transform: scale(0.95); }
-
-.ctrl-btn.active {
-  color: var(--accent-primary);
-  background: rgba(168, 85, 247, 0.12);
-  border-color: rgba(168, 85, 247, 0.3);
+.zen-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.5s ease;
 }
 
-/* ── Info Panel ──────────────────────────────────────────── */
-.info-panel {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 60;
-  background: var(--bg-glass-heavy);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 32px 36px;
-  box-shadow: 0 16px 64px rgba(0,0,0,0.5);
-  min-width: 300px;
-  transition: opacity var(--transition-smooth), visibility var(--transition-smooth);
-}
+/* Shared Modal Styles for Preset Browser */
+.gallery-modal { @extend .skin-modal; } /* Not real SASS, I'll just reuse the skin- classes in the JS directly to save CSS duplication */
 
-.info-panel.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.info-panel h2 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 16px;
-  color: var(--text-primary);
-}
-
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.info-table td {
-  padding: 6px 0;
-  font-size: 0.88rem;
-}
-
-.info-table td:first-child {
-  padding-right: 20px;
-  white-space: nowrap;
-}
-
-.info-table td:last-child {
-  color: var(--text-secondary);
-}
-
-kbd {
-  display: inline-block;
-  padding: 2px 7px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border-glass);
-  border-radius: 4px;
-  color: var(--accent-primary);
-}
-
-.info-credit {
-  margin-top: 20px;
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.info-credit a {
-  color: var(--accent-secondary);
-  text-decoration: none;
-}
-
-.info-credit a:hover { text-decoration: underline; }
-
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .splash-title { font-size: 2.2rem; }
-  .splash-glyph { font-size: 2rem; }
-  .overlay-bar { padding: 8px 14px; }
-  .preset-name { max-width: 120px; font-size: 0.75rem; }
-  .ctrl-btn { width: 36px; height: 36px; font-size: 1rem; }
-  .info-panel { min-width: auto; margin: 0 16px; padding: 24px; }
-}

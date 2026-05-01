@@ -21,7 +21,10 @@
   "license": "MIT",
   "dependencies": {
     "butterchurn": "^3.0.0-beta.5",
-    "butterchurn-presets": "^3.0.0-beta.4"
+    "butterchurn-presets": "^3.0.0-beta.4",
+    "butterchurn-presets-baron": "^1.5.1",
+    "butterchurn-presets-weekly": "^0.0.4",
+    "webamp": "^2.2.0"
   },
   "devDependencies": {
     "vite": "^6.3.5"

@@ -4,7 +4,16 @@ export default defineConfig({
   root: '.',
   base: '/BrainbLUr/',
   publicDir: 'public',
+  esbuild: {
+    target: 'esnext'
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext'
+    }
+  },
   build: {
+    target: 'esnext',
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: false,
