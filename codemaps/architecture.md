@@ -1,14 +1,29 @@
-# Overall Architecture
+# Architecture Map
+*Freshness: 2026-05-01*
 
-**Freshness Timestamp:** 2026-05-01T13:55:00-04:00
+## High-Level Overview
+BrainBlur is a fully client-side, web-native application that brings the classic MilkDrop 2 visualizer and Winamp player to modern browsers.
 
-BrainBlur is a WebGL-based visualizer application running entirely in the browser. It combines Webamp (a Winamp 2 reimplementation) with Butterchurn (a WebGL port of the MilkDrop visualizer).
+```mermaid
+graph TD
+    A[index.html] --> B[Vite Build System]
+    A --> C[main.js]
+    
+    C --> D[webamp-init.js]
+    C --> E[engine.js]
+    C --> F[milkdrop-controls.js]
+    
+    D -->|Audio Data| E
+    E -->|WebGL Render| G[Canvas Element]
+    
+    F --> H[audio.js System Capture]
+    F --> I[preset-browser.js]
+    F --> J[skin-browser.js]
+    F --> K[tutorial.js]
+```
 
-## High-Level Components
-
-*   **Entry Point (`src/js/main.js`):** Coordinates the initialization of the application's three main pillars: Webamp, the Skin Browser, and the Preset Browser.
-*   **Webamp Core (`src/js/webamp-init.js`):** Instantiates the Webamp player and injects the Butterchurn engine as an add-on module.
-*   **Visualization Engine (`src/js/engine.js` & `src/js/milkdrop-controls.js`):** Manages the rendering canvas, interacts with the Butterchurn instance, loads the massive preset packs (`butterchurn-presets`).
-*   **Audio Pipeline (`src/js/audio.js`):** Manages the system audio hook via `getDisplayMedia`. Integrates seamlessly with the global `AudioContext` to feed real-time desktop audio data into the Butterchurn visualizer without cross-context restrictions.
-*   **UI Components (`src/js/skin-browser.js`, `src/js/preset-browser.js`):** Manages auxiliary user interfaces outside the main Webamp player, allowing users to browse visualization presets and Winamp skins dynamically.
-*   **Build System:** Vite (`vite.config.js` and `package.json`).
+## Core Systems
+1.  **Player Engine**: Powered by Webamp, managing skins, audio playback (MP3 drop), and providing the audio analyzer node.
+2.  **Visualizer Engine**: Powered by Butterchurn, taking the audio node and rendering WebGL graphics to a full-screen canvas.
+3.  **UI Controls**: A custom, modern HTML/CSS overlay built with vanilla JavaScript, providing global controls (Zen mode, Favorites, Scaling) and modular dialogs for navigating thousands of assets.
+4.  **Audio Pipeline**: Dual-source audio intake capable of reading either the Webamp track or hooking directly into system audio via `getDisplayMedia`.

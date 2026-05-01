@@ -1,19 +1,18 @@
-# Data Models and Structures
+# Data Map
+*Freshness: 2026-05-01*
 
-**Freshness Timestamp:** 2026-05-01T13:55:00-04:00
+## State Persistence (localStorage)
+The application relies strictly on standard web APIs for persistence.
 
-BrainBlur deals primarily with third-party visualization formats and audio stream objects. It does not use traditional databases.
+### `milkdrop_favorites`
+- **Type**: JSON Array of Strings
+- **Description**: Stores the exact preset name identifiers that the user has starred.
+- **Example**: `["Geiss - Drop Shadow", "Rovastar - Starscape"]`
 
-## 1. Web Audio Graph Nodes
-*   **AudioContext**: The global `AudioContext` instantiated at startup. It governs timing and sample rates.
-*   **MediaStreamAudioSourceNode**: Created dynamically in `audio.js` via `getDisplayMedia` when the user enables System Audio capture. This node is connected directly to Butterchurn's internal analyzer.
-*   **GainNode**: Used as a silent/dummy source for initial visualizer boot so the WebGL context can start rendering immediately.
+### `milkdrop_tutorial_seen`
+- **Type**: String (`'true'` or unset)
+- **Description**: Flag to prevent the first-load system audio setup tutorial from appearing on subsequent visits.
 
-## 2. Butterchurn Presets
-*   Butterchurn consumes `.milk` files transpiled into nested JSON structures.
-*   These presets contain equation logic and texture instructions for the WebGL fragment/vertex shaders.
-*   `butterchurn-presets` and other preset packs bundle these JSON objects.
-
-## 3. Webamp Skins
-*   Winamp `.wsz` skins are standard ZIP archives containing BMP files, cursor files, and a `pledit.txt` metadata file.
-*   The Skin Browser loads these dynamically, passing the raw URL/blob to Webamp.
+## Memory / Process Data
+*   **Presets Map**: Loaded via dynamic `import()` of `butterchurn-presets`, `butterchurn-presets-baron`, and `butterchurn-presets-weekly`. Stored in memory via an aggregated `Object.assign({}, pack1, pack2, ...)` mapped structure inside `engine.js`.
+*   **Audio Data**: Captured as a float32 array time-domain and frequency-domain buffer by Webamp's underlying `AudioContext.createAnalyser()`.

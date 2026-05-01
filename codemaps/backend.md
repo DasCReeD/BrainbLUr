@@ -1,7 +1,16 @@
-# Backend Structure
+# Backend Map
+*Freshness: 2026-05-01*
 
-**Freshness Timestamp:** 2026-05-01T13:55:00-04:00
+## Overview
+BrainBlur is a **0-backend application**. It operates entirely within the user's browser, utilizing WebGL and Web Audio APIs.
 
-BrainBlur is a purely client-side static web application.
+## CI/CD Infrastructure
+While there is no active server, the project relies on GitHub Actions for its "backend" deployment infrastructure.
 
-There is currently no backend infrastructure, database, or API associated with this project. All computation, rendering, and audio processing occurs locally within the browser.
+*   **Workflow**: `.github/workflows/deploy.yml`
+*   **Process**:
+    1. Triggers on push to `main`.
+    2. Provisions an Ubuntu runner.
+    3. Executes `npm install` and `npm run build` (Vite).
+    4. Uploads the `dist/` directory as a GitHub Pages artifact.
+    5. Deploys to the production GitHub Pages environment.

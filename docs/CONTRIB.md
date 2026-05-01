@@ -1,40 +1,29 @@
 # Contributing to BrainBlur
 
-Welcome to BrainBlur! This document provides guidelines and instructions for contributing to the project. BrainBlur is a web-native MilkDrop visualizer powered by the Butterchurn WebGL engine.
+Welcome to BrainBlur! This guide outlines the development workflow for the web-native MilkDrop 2 visualizer.
 
-## Development Workflow
-
-BrainBlur uses [Vite](https://vitejs.dev/) as its build tool and development server.
-
-### Available Scripts
-
-These scripts are defined in `package.json`:
+## Available Scripts (from package.json)
 
 | Script | Command | Description |
 |---|---|---|
-| `npm run dev` | `vite` | Starts the Vite development server with Hot Module Replacement (HMR). Use this for local development. |
-| `npm run build` | `vite build` | Compiles the project into static files in the `dist/` directory, optimized for production. |
-| `npm run preview` | `vite preview` | Locally previews the production build created by `npm run build`. |
-| `npm run convert-presets` | `node scripts/convert-presets.js` | Runs the preset conversion script to process `.milk` files or other preset formats. |
+| `dev` | `vite` | Starts the local Vite development server with Hot Module Replacement (HMR). |
+| `build` | `vite build` | Bundles the application for production deployment. |
+| `preview` | `vite preview` | Previews the production build locally. |
+| `convert-presets` | `node scripts/convert-presets.js` | Utility script for converting raw MilkDrop presets into JSON. |
 
-### Environment Setup
+## Environment Setup
+*   **Prerequisites:** Node.js (v18+ recommended) and npm/pnpm.
+*   **Dependencies:** The project relies on `butterchurn`, `webamp`, and massive preset packs (`butterchurn-presets-baron`, `butterchurn-presets-weekly`).
+*   **Env Variables:** There are no environment variables (`.env`) required for this purely static frontend application.
 
-1. Ensure you have **Node.js** installed (v18+ recommended).
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. (Optional) There is currently no `.env` requirement. If backend integrations are added in the future, copy `.env.example` to `.env` and fill in the required variables.
+## Development Workflow
+1.  **Start the Server:** Run `npm run dev` to start the local Vite server.
+2.  **Architecture:** The UI is heavily modularized within `src/js/`. When adding new features, follow the existing pattern of separating DOM logic (e.g., `preset-browser.js`, `milkdrop-controls.js`) from engine logic (`engine.js`).
+3.  **Aesthetics:** We utilize a "glassmorphism" design language defined in `src/css/style.css`.
+4.  **Audio Testing:** To test the audio visualizer, you can either drop an MP3 into the Winamp window or use the **Capture** button to hook into your system audio via the `getDisplayMedia` API. Ensure you select "Also share system audio" in the browser prompt.
 
-### Testing Procedures
-
-Currently, BrainBlur relies on manual testing. 
-- Ensure all visualizer presets render correctly in `npm run dev`.
-- Verify the UI components (preset browser, skin browser) function properly without throwing console errors.
-- Test system audio capture by clicking the Microphone button and verifying the `getDisplayMedia` hook connects accurately to the global `AudioContext` without `InvalidAccessError` exceptions.
-
-## Making Changes
-
-1. **Keep it focused**: Adhere to the project's rule of MANY SMALL FILES over FEW LARGE FILES.
-2. **Immutability**: Avoid mutating objects.
-3. **Review**: Ensure no `console.log` statements remain in your production code.
+## Testing Procedures
+Since this is a WebGL-heavy visual application, testing is primarily manual:
+*   Ensure Webamp initializes successfully.
+*   Ensure Butterchurn transitions correctly between presets.
+*   Verify the heavy preset packs (200MB+) load smoothly in the background without freezing the UI.

@@ -1,18 +1,22 @@
-# Frontend Structure
+# Frontend Map
+*Freshness: 2026-05-01*
 
-**Freshness Timestamp:** 2026-05-01T13:55:00-04:00
+## Entry Points
+*   `index.html`: Holds the `#canvas` and `#webamp-container` mount points.
+*   `src/js/main.js`: Main bootstrap file.
 
-The frontend is a pure JavaScript/CSS application built on top of Vite without a major rendering framework (e.g., React or Vue are not used directly for the outer shell, although Webamp internally uses React).
+## Engine Modules
+*   `engine.js`: Initializes Butterchurn. Manages the core visual loop. Implements the dynamic background hydration of heavy preset packs to prevent TTI blocking.
+*   `audio.js`: Contains `captureTabAudio` using `navigator.mediaDevices.getDisplayMedia` to intercept system-wide audio output.
 
-## Source Map (`src/js/`)
+## UI Modules
+*   `milkdrop-controls.js`: The central "Controller" for the bottom bar UI. Injects the DOM, wires up event listeners for Next/Prev, Lock, Fav, and Zen mode.
+*   `preset-browser.js`: Manages the preset gallery modal. Includes a batch-renderer (`renderBatch`) and an `All / Favorites` tab filtering system.
+*   `skin-browser.js`: Manages the Webamp skin selection modal.
+*   `tutorial.js`: Manages the first-time visitor setup modal (persisted via `localStorage`).
 
-*   `main.js`: Bootstraps the application, loading Webamp, CSS, and side panels.
-*   `webamp-init.js`: Configuration and mounting of the Webamp component. Links audio nodes and visualizer instances.
-*   `engine.js`: Butterchurn integration. Manages the WebGL canvas, preset transitions, and rendering loops.
-*   `audio.js`: Web Audio API wrapper. Handles system audio capture via `getDisplayMedia`, disabling the video track to save resources while preventing Chrome session termination. Shares global `AudioContext`.
-*   `milkdrop-controls.js`: UI logic for interacting directly with the visualizer (next/previous preset, full screen, system capture, etc.).
-*   `preset-browser.js`: Logic for fetching and displaying the list of available Butterchurn presets.
-*   `skin-browser.js`: Logic for loading Winamp `.wsz` skins and applying them to the Webamp instance dynamically.
+## Webamp Integration
+*   `webamp-init.js`: Instantiates `Webamp`, sets the default skin, binds it to the DOM, and exposes the audio context to the visualizer engine.
 
-## Styles (`src/css/`)
-*   `style.css`: Global styles, CSS variables, typography, layout for the side panels (browsers), and fullscreen canvas handling (`z-index` configuration).
+## Styles
+*   `src/css/style.css`: A single vanilla CSS file defining variables, typography (Inter), glassmorphism components, and layout utilities.

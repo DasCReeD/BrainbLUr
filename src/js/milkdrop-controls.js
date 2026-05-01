@@ -2,11 +2,11 @@ import { initEngine, loadPresetByIndex, getPresetKeys, loadRandomPreset, reconne
 import { toggle as toggleSkinBrowser } from './skin-browser.js'
 import { toggle as togglePresetBrowser } from './preset-browser.js'
 import { captureTabAudio } from './audio.js'
+import { initTutorial } from './tutorial.js'
 
 let isLocked = false
 let currentPresetIndex = 0
 let presetTimer = null
-let isDoubleSize = true // Start doubled by default
 let isWinampHidden = false
 let transitionMode = 'all' // 'all' or 'favs'
 
@@ -20,7 +20,7 @@ export async function initMilkdropControls(webampInstance) {
   controlBar.innerHTML = `
     <div class="milk-control-group left">
       <button id="btn-milk-system" title="Capture Default Audio (No Popups)"><i>🎤</i><span>Capture</span></button>
-      <button id="btn-milk-winamp" title="Toggle Winamp Player"><i>👁</i><span>Winamp</span></button>
+      <button id="btn-milk-winamp" title="Toggle Winamp Player"><i>🎵</i><span>Winamp</span></button>
       <button id="btn-milk-skins" title="Browse Skins (S)"><i>🎨</i><span>Skins</span></button>
       <button id="btn-milk-presets" title="Preset Gallery"><i>🌌</i><span>Presets</span></button>
     </div>
@@ -32,9 +32,6 @@ export async function initMilkdropControls(webampInstance) {
       <button id="btn-milk-fav" title="Favorite Preset"><i>☆</i><span>Fav</span></button>
       <button id="btn-milk-next" title="Next Preset (Space)"><i>⏭</i><span>Next</span></button>
     </div>
-    <div class="milk-control-group right">
-      <button id="btn-milk-scale" title="Toggle 1x/2x Scale"><i>🔍</i><span>2x</span></button>
-    </div>
   `
   document.body.appendChild(controlBar)
 
@@ -42,12 +39,14 @@ export async function initMilkdropControls(webampInstance) {
   const lockBtn = document.getElementById('btn-milk-lock')
   const modeBtn = document.getElementById('btn-milk-mode')
   const favBtn = document.getElementById('btn-milk-fav')
-  const scaleBtn = document.getElementById('btn-milk-scale')
   const winampBtn = document.getElementById('btn-milk-winamp')
   const skinsBtn = document.getElementById('btn-milk-skins')
   const presetsBtn = document.getElementById('btn-milk-presets')
   const zenBtn = document.getElementById('btn-zen-mode')
   const systemBtn = document.getElementById('btn-milk-system')
+
+  // Initialize tutorial on load
+  initTutorial()
 
   let dummyCtx = null
 
@@ -232,18 +231,6 @@ export async function initMilkdropControls(webampInstance) {
       if (presetTimer) clearInterval(presetTimer)
     } else {
       startAutoTransition()
-    }
-  })
-
-  // Toggle 1x/2x Scale
-  scaleBtn.addEventListener('click', () => {
-    isDoubleSize = !isDoubleSize
-    scaleBtn.innerHTML = isDoubleSize ? '<i>🔍</i><span>2x</span>' : '<i>🔍</i><span>1x</span>'
-    const container = document.getElementById('webamp-container')
-    if (isDoubleSize) {
-      container.classList.add('zoom-2x')
-    } else {
-      container.classList.remove('zoom-2x')
     }
   })
 

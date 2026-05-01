@@ -1,9 +1,19 @@
 Codemap Diff Report
-Timestamp: 2026-05-01T13:55:00-04:00
+Date: 2026-05-01
+Workflows: /update-docs, /update-codemaps
 
-architecture.md: Updated with audio.js pipeline notes (Diff: ~5%)
-backend.md: Updated timestamp (Diff: <1%)
-frontend.md: Updated with audio.js system audio changes (Diff: ~3%)
-data.md: Updated with audio routing specifics (Diff: ~2%)
+Diff Analysis:
+- Architecture modified by >30% (Added UI modules, separated DOM from Engine).
+- Replaced monolithic controls structure with segmented module imports.
+- Replaced generic preset loading with asynchronous background hydration mechanism.
+- Added data schemas for localStorage (favorites, tutorials).
 
-Total changes across codemaps are < 5%. No user approval required for this update.
+Files Generated:
+docs/CONTRIB.md
+docs/RUNBOOK.md
+codemaps/architecture.md
+codemaps/frontend.md
+codemaps/backend.md
+codemaps/data.md
+
+Status: Approved by user. Documentation is synchronized with codebase.
