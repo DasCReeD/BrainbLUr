@@ -6,7 +6,7 @@
  * and supports lock/next/prev controls.
  */
 
-import butterchurnPresets from 'butterchurn-presets'
+import butterchurnPresetsBase from 'butterchurn-presets'
 
 let allPresets = {}
 let presetNames = []
@@ -26,8 +26,8 @@ const BLEND_SECONDS = 2.7       // Smooth blend duration
 export function init(engineLoadPreset) {
   loadPresetFn = engineLoadPreset
 
-  // Load all presets from the butterchurn-presets package
-  allPresets = butterchurnPresets.getPresets()
+  // butterchurn-presets v3 exports the presets map directly as default
+  allPresets = butterchurnPresetsBase
   presetNames = Object.keys(allPresets)
 
   console.log(`[Presets] Loaded ${presetNames.length} presets`)
